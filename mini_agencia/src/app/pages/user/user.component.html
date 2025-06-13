@@ -1,1 +1,12 @@
-<p>user works!</p>
+<div class="user-page">
+  <h2>🌴 Discover Your Next Adventure 🌴</h2>
+  <div class="trip-list">
+    <div class="trip-card" *ngFor="let trip of trips">
+      <h3>{{ trip.destination }}</h3>
+      <p><strong>Date:</strong> {{ trip.departureDate | date: 'mediumDate' }}</p>
+      <p><strong>Price:</strong> ${{ trip.price }}</p>
+      <p><strong>Status:</strong> {{ trip.isAvailable ? '✅ Available' : '❌ Not Available' }}</p>
+    </div>
+  </div>
+</div>
+
