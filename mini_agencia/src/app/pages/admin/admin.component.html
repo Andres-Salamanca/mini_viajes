@@ -1,1 +1,93 @@
-<p>admin works!</p>
+<div class="admin-container">
+  <h2>Panel de Administración</h2>
+
+  <p *ngIf="message" style="color: green;">{{ message }}</p>
+  <p *ngIf="error" style="color: red;">{{ error }}</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Rol</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <ng-container *ngIf="selectedUser?.id !== user.id; else editForm">
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.role }}</td>
+          <td>
+            <button (click)="editUser(user)">Editar</button>
+             <button (click)="deleteUser(user)" style="background-color: red;">Eliminar</button>
+          </td>
+        </ng-container>
+        <ng-template #editForm>
+          <td><input [(ngModel)]="selectedUser!.name" /></td>
+          <td><input [(ngModel)]="selectedUser!.email" /></td>
+          <td>
+            <select [(ngModel)]="selectedUser!.role">
+              <option>User</option>
+              <option>Admin</option>
+            </select>
+          </td>
+          <td>
+            <button (click)="saveUser()">Guardar</button>
+            <button (click)="cancelEdit()">Cancelar</button>
+          </td>
+        </ng-template>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<div class="admin-container">
+  <h2>Gestión de Viajes</h2>
+
+  <!-- Formulario para crear viajes -->
+  <div class="trip-form">
+    <input placeholder="Destino" [(ngModel)]="newTrip.destination" />
+    <input type="datetime-local" [(ngModel)]="newTrip.departureDate" />
+    <input type="number" placeholder="Precio" [(ngModel)]="newTrip.price" />
+    <label><input type="checkbox" [(ngModel)]="newTrip.isAvailable" /> Disponible</label>
+    <button (click)="createTrip()">Crear</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Destino</th>
+        <th>Fecha</th>
+        <th>Precio</th>
+        <th>Disponible</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let trip of trips">
+        <td *ngIf="editingTripId !== trip.id">{{ trip.destination }}</td>
+        <td *ngIf="editingTripId === trip.id"><input [(ngModel)]="trip.destination" /></td>
+
+        <td *ngIf="editingTripId !== trip.id">{{ trip.departureDate | date:'short' }}</td>
+        <td *ngIf="editingTripId === trip.id"><input type="datetime-local" [(ngModel)]="trip.departureDate" /></td>
+
+        <td *ngIf="editingTripId !== trip.id">{{ trip.price }}</td>
+        <td *ngIf="editingTripId === trip.id"><input type="number" [(ngModel)]="trip.price" /></td>
+
+        <td>
+          <input type="checkbox" [(ngModel)]="trip.isAvailable" />
+        </td>
+
+        <td>
+          <button *ngIf="editingTripId !== trip.id" (click)="editingTripId = trip.id">Editar</button>
+          <button *ngIf="editingTripId === trip.id" (click)="updateTrip(trip)">Guardar</button>
+          <button (click)="deleteTrip(trip.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+

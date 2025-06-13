@@ -205,5 +205,20 @@ app.MapPut("/updateUser", (User update, Guid id) =>
 })
 .WithName("UpdateUser").WithOpenApi().RequireAuthorization();
 
+app.MapDelete("/deleteUser/{id}", (Guid id) =>
+{
+    var user = db.Users.Find(id);
+    if (user == null)
+    {
+        return Results.NotFound(new { message = $"User with ID {id} not found" });
+    }
+
+    db.Users.Remove(user);
+    db.SaveChanges();
+    return Results.Ok(new { message = $"User {user.Name} deleted successfully" });
+})
+.RequireAuthorization("AdminOnlyPolicy")
+.WithName("DeleteUser").WithOpenApi();
+
 app.Run();
 
