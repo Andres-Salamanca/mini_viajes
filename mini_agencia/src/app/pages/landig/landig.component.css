@@ -1,0 +1,48 @@
+/* src/app/pages/landing/landing.component.css */
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  height: 100vh;
+  overflow: hidden;
+}
+
+:host {
+  display: block;
+  height: 100vh;
+  background-image: url('/assets/beach.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Resto del CSS igual */
+.navbar {
+  background-color: rgba(0, 188, 212, 0.8);
+  color: white;
+  padding: 1rem 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.landing-container {
+  text-align: center;
+  margin-top: 15vh;
+  color: white;
+}
+
+.buttons .btn {
+  background-color: #ff9800;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  margin: 0 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease;
+}
+
+.buttons .btn:hover {
+  background-color: #f57c00;
+}
+
