@@ -1,0 +1,53 @@
+:host {
+  display: block;
+  height: 100vh;
+  background-image: url('/assets/beach.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+}
+
+.navbar {
+  background-color: rgba(0, 188, 212, 0.8);
+  padding: 1rem 2rem;
+  color: white;
+}
+
+.form-container {
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 90%;
+  max-width: 400px;
+  margin: 10vh auto;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: left;
+}
+
+.form-container h2 {
+  text-align: center;
+}
+
+input {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  border: none;
+}
+
+button {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #ff9800;
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #f57c00;
+}

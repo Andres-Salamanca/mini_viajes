@@ -65,6 +65,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
   });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnlyPolicy", policy => policy.RequireRole("Admin"));
@@ -85,6 +96,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.MapOpenApi();
 }
+app.UseCors("AllowAngularApp");
 app.UseAuthentication();
 app.UseHttpsRedirection();
 app.UseAuthorization();
