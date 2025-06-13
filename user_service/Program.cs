@@ -89,6 +89,8 @@ app.UseAuthentication();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 
+
+// -------------------- ENDPOINTS ---------------------------- //
 // ====== get user ======
 app.MapGet("/getAllUser", () =>
 {

@@ -1,8 +1,11 @@
 using Microsoft.OpenApi.Models;
 using System.Text;
-using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using TripServices.DTO;
+using TripServices.Model;
+using TripServices.Data;
+using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -38,7 +41,36 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 builder.Services.AddMvc();
+var conf = builder.Configuration;
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+  .AddJwtBearer(options =>
+  {
+      var key = Encoding.UTF8.GetBytes(conf["Jwt:SecretKey"]!);
+
+      options.TokenValidationParameters = new TokenValidationParameters
+      {
+          ValidateIssuer = true,
+          ValidIssuer = conf["Jwt:Issuer"],
+
+          ValidateAudience = true,
+          ValidAudience = conf["Jwt:Audience"],
+
+          ValidateLifetime = true,
+          ValidateIssuerSigningKey = true,
+          IssuerSigningKey = new SymmetricSecurityKey(key)
+      };
+
+  });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnlyPolicy", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("UserOnlyPolicy", policy => policy.RequireRole("User"));
+});
+builder.Services.AddAuthorization();
+
+using var db = new dbContext();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -49,33 +81,73 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseAuthentication();
 app.UseHttpsRedirection();
+app.UseAuthorization();
 
 
-
-app.MapGet("/getDestionations", () =>
+// -------------------- ENDPOINTS ---------------------------- //
+app.MapGet("/getDestinations", () =>
 {
-
+    var trips = db.Trips.ToList();
+    return trips.Any()
+        ? Results.Ok(trips)
+        : Results.NotFound(new { message = "No trips found." });
 })
-.WithName("GetDestinations");
+.WithName("GetDestinations")
+.WithOpenApi()
+.RequireAuthorization();
 
-app.MapPost("/createDestination", () =>
+app.MapPost("/createDestination", async (CreateTripRequest newTrip) =>
 {
+    var trip = new Trip
+    {
+        Id = Guid.NewGuid(),
+        Destination = newTrip.Destination,
+        DepartureDate = newTrip.DepartureDate,
+        Price = newTrip.Price,
+        IsAvailable = true
+    };
 
+    db.Trips.Add(trip);
+    await db.SaveChangesAsync();
+
+    return Results.Created($"/getDestinations/{trip.Id}", trip);
 })
-.WithName("CreateDestinations");
+.WithName("CreateDestination")
+.WithOpenApi()
+.RequireAuthorization("AdminOnlyPolicy");
 
-app.MapPut("/updateDestination", () =>
+app.MapPut("/updateDestination/{id}", async (Guid id, CreateTripRequest updateTrip) =>
 {
+    var trip = await db.Trips.FindAsync(id);
+    if (trip is null)
+        return Results.NotFound(new { message = "Trip not found" });
 
+    trip.Destination = updateTrip.Destination;
+    trip.DepartureDate = updateTrip.DepartureDate;
+    trip.Price = updateTrip.Price;
+
+    await db.SaveChangesAsync();
+    return Results.Ok(trip);
 })
-.WithName("UpdateDestinations");
+.WithName("UpdateDestination")
+.WithOpenApi()
+.RequireAuthorization("AdminOnlyPolicy");
 
-app.MapDelete("/deleteDestination", () =>
+app.MapDelete("/deleteDestination/{id}", async (Guid id) =>
 {
+    var trip = await db.Trips.FindAsync(id);
+    if (trip is null)
+        return Results.NotFound(new { message = "Trip not found" });
 
+    db.Trips.Remove(trip);
+    await db.SaveChangesAsync();
+    return Results.Ok(new { message = "Trip deleted" });
 })
-.WithName("DeleteDestinations");
+.WithName("DeleteDestination")
+.WithOpenApi()
+.RequireAuthorization("AdminOnlyPolicy");
 
 app.Run();
 
