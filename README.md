@@ -118,6 +118,21 @@ Para consumir cualquier endpoint protegido, primero se debe hacer **login** medi
 
 # Idea
 ![overview](assets/overiview.png)
+En la imagen anterior se representa la **visión principal del sistema**, que aún no está completamente implementada. A continuación se detallan los componentes que **faltaron por completarse** o que están en desarrollo:
+
+Se planeaba usar **Docker** para contenerizar cada uno de los servicios, y luego **docker-compose** para orquestarlos, permitiendo levantar el sistema completo fácilmente. Además, se quería configurar un **load balancer** para escalar horizontalmente los servicios más utilizados.
+
+🔗 Archivo `docker-compose.yaml`:  
+[https://github.com/Andres-Salamanca/mini_viajes/blob/main/docker-compose.yaml](https://github.com/Andres-Salamanca/mini_viajes/blob/main/docker-compose.yaml)
+
+
+### 🧭 Arquitectura Planeada
+
+* [ ] Completar archivo `docker-compose.yaml`
+* [ ] Agregar configuración para `nginx`
+* [ ] Implementar cola de notificaciones (RabbitMQ)
+* [ ] Crear microservicio de notificaciones
+* [ ] Agregar monitoreo con herramientas como `Prometheus`
 
 # Front
 Landing page
