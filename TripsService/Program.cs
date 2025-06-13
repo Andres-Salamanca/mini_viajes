@@ -82,9 +82,9 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddAuthorization();
 
 using var db = new dbContext();
-if (!tripDb.Trips.Any())
+if (!db.Trips.Any())
 {
-    tripDb.Trips.AddRange(
+    db.Trips.AddRange(
         new Trip
         {
             Id = Guid.NewGuid(),
@@ -110,7 +110,7 @@ if (!tripDb.Trips.Any())
             IsAvailable = false
         }
     );
-    tripDb.SaveChanges();
+    db.SaveChanges();
 }
 var app = builder.Build();
 
