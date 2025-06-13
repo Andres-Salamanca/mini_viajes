@@ -90,5 +90,35 @@ ng serve
 
 ¡Listo! El frontend debería estar disponible en [http://localhost:4200](http://localhost:4200).
 
-```
+## 🔐 Autenticación y Autorización
+
+### API disponibles
+
+El sistema tiene **dos APIs principales**:
+
+1. **API de Usuarios**
+2. **API de Viajes**
+
+---
+
+### 🧑💼 Roles y Permisos
+
+Hay **dos tipos de roles** definidos:
+
+| Rol   | Permisos                                                                 |
+|--------|-------------------------------------------------------------------------|
+| Admin  | Acceso completo a todos los endpoints: crear, editar, eliminar y ver.  |
+| User   | Solo puede **consultar viajes**. No tiene acceso a crear/editar.       |
+
+---
+
+### 🔑 Autenticación con JWT
+
+Para consumir cualquier endpoint protegido, primero se debe hacer **login** mediante el endpoint:
+
+# Front
+
+![lading](assets/landing.png)
+![Admin](assets/admin.png)
+![user](assets/user.png)
 
