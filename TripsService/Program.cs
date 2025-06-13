@@ -82,6 +82,36 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddAuthorization();
 
 using var db = new dbContext();
+if (!tripDb.Trips.Any())
+{
+    tripDb.Trips.AddRange(
+        new Trip
+        {
+            Id = Guid.NewGuid(),
+            Destination = "Paris",
+            DepartureDate = DateTime.UtcNow.AddDays(10),
+            Price = 999.99m,
+            IsAvailable = true
+        },
+        new Trip
+        {
+            Id = Guid.NewGuid(),
+            Destination = "Tokyo",
+            DepartureDate = DateTime.UtcNow.AddDays(30),
+            Price = 1200.50m,
+            IsAvailable = true
+        },
+        new Trip
+        {
+            Id = Guid.NewGuid(),
+            Destination = "New York",
+            DepartureDate = DateTime.UtcNow.AddDays(5),
+            Price = 850.00m,
+            IsAvailable = false
+        }
+    );
+    tripDb.SaveChanges();
+}
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -87,6 +87,23 @@ var app = builder.Build();
 
 
 using var db = new dbContext();
+if (!db.Users.Any())
+{
+    string HashPassword(string password)
+    {
+        using var sha256 = SHA256.Create();
+        byte[] hash = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+        return Convert.ToBase64String(hash);
+    }
+
+    db.Users.AddRange(
+        new User { Name = "admin", Email = "admin@admin", PasswordHash = HashPassword("123"), Role = "Admin" },
+        new User { Name = "user", Email = "user@user", PasswordHash = HashPassword("123"), Role = "User" }
+    );
+
+    db.SaveChanges();
+}
+
 var Jwtservice = new JwtService(conf);
 
 // Configure the HTTP request pipeline.
